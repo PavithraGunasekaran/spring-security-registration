@@ -10,6 +10,31 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({ "success", "score", "action","challenge_ts", "hostname", "error-codes" })
+
+abstract class GoogleResponseErrorCode{
+
+    abstract boolean getErrorCode();
+}
+
+class InvalidResponse extends GoogleResponse{
+    boolean getErrorCode(){
+        return false;
+    }
+}
+
+class MissingResponse extends GoogleResponse{
+    boolean getErrorCode(){
+        return false;
+    }
+}
+
+class BadRequest extends GoogleResponse{
+    boolean getErrorCode(){
+        return true;
+    }
+}
+
+
 public class GoogleResponse {
 
     @JsonProperty("success")
@@ -112,15 +137,38 @@ public class GoogleResponse {
         if (errors == null) {
             return false;
         }
-        for (final ErrorCode error : errors) {
-            switch (error) {
-            case InvalidResponse:
-            case MissingResponse:
-            case BadRequest:
-                return true;
-            default:
-                break;
+        for (ErrorCode error : errors) {
+
+            /**
+             * Code before refactoring
+             */
+
+//            switch (error) {
+//            case InvalidResponse:
+//            case MissingResponse:
+//            case BadRequest:
+//                return true;
+//            default:
+//                break;
+//            }
+
+            /**
+             * Code after refactoring
+             */
+
+//            if(error == ErrorCode.InvalidResponse){
+//                InvalidResponse invalidResponse=new InvalidResponse();
+//                invalidResponse.getErrorCode();
+//            }
+//            if(error == ErrorCode.MissingResponse){
+//                MissingResponse missingResponse=new MissingResponse();
+//                missingResponse.getErrorCode();
+//            }
+            if(error == ErrorCode.BadRequest){
+                BadRequest badRequest=new BadRequest();
+                badRequest.getErrorCode();
             }
+
         }
         return false;
     }
